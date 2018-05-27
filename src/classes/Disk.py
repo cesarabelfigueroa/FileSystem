@@ -23,7 +23,7 @@ class Disk:
         f.close()
 
     def getAvailableSpaceInDataBitmap(self):
-        f = open(self.path, 'w+')
+        f = open(self.path, 'r')
         for bit in range(0, self.BLOCK_BITMAP_SIZE):
             f.seek(bit)
             if not f.read(1):
@@ -31,7 +31,7 @@ class Disk:
         return False
 
     def getAvailableSpaceInInodeBitmap(self):
-        f = open(self.path, 'w+')
+        f = open(self.path, 'r')
         for bit in range(self.BLOCK_BITMAP_SIZE, self.INODE_BITMAP_SIZE + self.BLOCK_BITMAP_SIZE):
             f.seek(bit)
             if not f.read(1):
@@ -39,9 +39,13 @@ class Disk:
         return False
 
     def setOcuppiedDataBitmap(self, index):
-        f = open(self.path, 'w+')
-        f.seek(index)
-        f.write("1")
+        with open(self.path, "rb+") as file:
+            file.seek(self.getSizeBytes())
+            file.write(bytearray([1]))
+            file.seek(self.getSizeBytes())
+            value = file.read(1) 
+            print(value)
+            file.close()
 
     def setOcuppiedInodeBitmap(self, index):
         f = open(self.path, 'w+')
