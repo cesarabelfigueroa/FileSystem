@@ -1,10 +1,13 @@
-class Inode:
+import itertools
 
+class Inode:
+    newid = itertools.count().next
     def __init__(self, mode, ownerInfo, size, timeStamps, directBlocks, indirectBlocks, doubleIndirect, tripleIndirect):
+        self.id = resource_cl.newid()
         self.mode = mode
         self.ownerInfo = ownerInfo
         self.size = size
-        self. timeStamps = timeStamps
+        self.timeStamps = timeStamps
         self.directBlocks = directBlocks
         self.indirectBlocks = indirectBlocks
         self.doubleIndirect = doubleIndirect
@@ -34,6 +37,9 @@ class Inode:
     def setMode(self, tripleIndirect):
         self.tripleIndirect = tripleIndirect
 
+    def getId(self):
+        return self.id
+
     def getMode(self):
         return self.mode
 
@@ -57,3 +63,6 @@ class Inode:
 
     def getMode(self):
         return self.tripleIndirect
+
+    def getNumberOfBlocks(arg):
+        return (len(directBlocks) + len(indirectBlocks) + len(doubleIndirect) + len(tripleIndirect))
