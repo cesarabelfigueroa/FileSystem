@@ -1,17 +1,20 @@
 import itertools
+import math
 
 class Inode:
-    newid = itertools.count().next
-    def __init__(self, mode, ownerInfo, size, timeStamps, directBlocks, indirectBlocks, doubleIndirect, tripleIndirect):
-        self.id = resource_cl.newid()
-        self.mode = mode
-        self.ownerInfo = ownerInfo
-        self.size = size
-        self.timeStamps = timeStamps
-        self.directBlocks = directBlocks
-        self.indirectBlocks = indirectBlocks
-        self.doubleIndirect = doubleIndirect
-        self.tripleIndirect = tripleIndirect
+    def __init__(self, inodeId, mode, size):
+        self.id = inodeId
+        self.i_mode = mode
+        self.i_size = size
+        self.i_atime = datetime.datetime.now()
+        self.i_ctime = datetime.datetime.now()
+        self.i_mtime = datetime.datetime.now()
+        self.i_dtime = '/0'
+        self.i_links_count = 0
+        self.i_blocks = math.ceil(size / 4000)
+        self.i_block = []
+        self.offset = 65024
+        self.limit = 589312
 
     def setMode(self, mode):
         self.mode = mode
