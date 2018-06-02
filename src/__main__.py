@@ -1,8 +1,9 @@
-from classes.FileSystem import FileSystem
+from classes.Shell import Shell
 
 
 def main():
-	fileSystem = FileSystem()
-	
+	shell = Shell()
+	shell.execute()
+
 
 main()

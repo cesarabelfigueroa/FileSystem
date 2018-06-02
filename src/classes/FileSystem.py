@@ -1,4 +1,6 @@
 from classes.Disk import Disk
+from classes.Shell import Shell
+
 
 
 class FileSystem:
