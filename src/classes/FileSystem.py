@@ -1,6 +1,4 @@
 from classes.Disk import Disk
-from classes.Shell import Shell
-
 
 
 class FileSystem:
@@ -12,7 +10,7 @@ class FileSystem:
         dataBitMapIndex = self.Device.getAvailableSpaceInDataBitmap()
         self.Device.setOcuppiedDataBitmap(dataBitMapIndex)
 
-        #self.Device.setOcuppiedDataBitmap(
-                #self.Device.getAvailableSpaceInInodeBitmap())
+        # self.Device.setOcuppiedDataBitmap(
+        # self.Device.getAvailableSpaceInInodeBitmap())
         print(self.Device.getAvailableSpaceInDataBitmap())
         print(self.Device.getAvailableSpaceInInodeBitmap())

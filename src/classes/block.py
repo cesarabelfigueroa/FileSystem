@@ -1,14 +1,10 @@
 import itertools
 
 class Block:
-    newid = itertools.count().next
-    def __init__(self, data):
-        self.id = resource_cl.newid()
-        self.data = data
+    def __init__(self,blockId):
+        self.blockId = blockId
         self.inodePointers = []
 
-    def setData(self):
-        self.data = data
 
     def setInodePointers(self, inodePointers):
         self.inodePointers = inodePointers

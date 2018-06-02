@@ -40,7 +40,7 @@ class Disk:
 
     def setOcuppiedDataBitmap(self, index):
         with open(self.path, "rb+") as file:
-            file.seek(self.getSizeBytes())
+            file.seek(index)
             file.write(bytearray([1]))
             file.seek(self.getSizeBytes())
             value = file.read(1) 
@@ -51,3 +51,4 @@ class Disk:
         f = open(self.path, 'w+')
         f.seek(index)
         f.write("1")
+
