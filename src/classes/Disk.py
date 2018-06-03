@@ -82,9 +82,7 @@ class Disk:
         with open(self.path, "rb+") as file:
             file.seek(self.BLOCK_OFFSET+ block* self.BLOCK_SIZE)
             file.write(data)
-            print(block)
             value = file.read(4000)
-            print(value.decode("utf8"))
             file.close()
 
 

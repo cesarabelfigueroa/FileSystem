@@ -56,7 +56,7 @@ class FileSystem:
                 inode = self.Device.getInodeFromDisk(x.inode)
                 for block in inode.i_block:
                     value = self.Device.readData(block)
-                    print(value.decode("utf8"))
+                    return value.decode("utf8")
                 return ""
 
         

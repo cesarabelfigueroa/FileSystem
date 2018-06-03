@@ -15,12 +15,14 @@ class Shell:
                     self.fs.createFile(content, parameters[2])
                 else:
                     filename = parameters[1]
-                    self.fs.readFile(filename)
+                    value = self.fs.readFile(filename)
+                    print (value)
 
             elif(parameters[0] == "ls"):
                 current = self.fs.currentDirectory
                 if(current != None):
-                    print(current.directoryEntries[0].name)
+                    for entry in current.directoryEntries:
+                        print(entry.name)
             elif(parameters[0] == "mkdir"):
                 print("mkdir")
             elif(parameters[0] == "rmdir"):
