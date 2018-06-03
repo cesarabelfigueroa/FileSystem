@@ -1,4 +1,5 @@
 from classes.inode import Inode
+import pickle
 
 class Disk:
 
@@ -9,6 +10,8 @@ class Disk:
         self.BLOCK_BITMAP_SIZE = 65536
         self.INODE_BITMAP_SIZE = 1048576
         self.INODE_SIZE = 512
+        self.BLOCK_OFFSET = self.INODE_SIZE*1024 + self.BLOCK_BITMAP_SIZE + self.INODE_BITMAP_SIZE 
+        self.BLOCK_SIZE = 32000
     def getSizeMB(self):
         return self.size
 
@@ -61,7 +64,7 @@ class Disk:
     def saveInodeInDisk(self, inode):
         with open(self.path, "rb+") as file:
             file.seek((inode.id*self.INODE_SIZE)+inode.offset)
-            file.write(bytearray(inode))
+            pickle.dump(inode,file)
             file.close()
         
 
@@ -73,4 +76,14 @@ class Disk:
         self.saveInodeInDisk(inode)
         return inode
 
+    def writeData (self, data, block):
+        with open(self.path, "rb+") as file:
+            file.seek(self.BLOCK_OFFSET+ block* self.BLOCK_SIZE)
+            file.write(data)
+            file.close()
 
+    def writeObject(self, val,block):
+        with open(self.path, "rb+") as file:
+            file.seek(self.BLOCK_OFFSET+ block* self.BLOCK_SIZE)
+            pickle.dump(val,file)
+            file.close()

@@ -1,6 +1,6 @@
 import itertools
 import math
-
+import datetime
 class Inode:
     def __init__(self, inodeId, mode, size):
         self.id = inodeId
@@ -69,3 +69,6 @@ class Inode:
 
     def getNumberOfBlocks(arg):
         return (len(directBlocks) + len(indirectBlocks) + len(doubleIndirect) + len(tripleIndirect))
+
+    def addBlock(self, index):
+        self.i_block.append(index)

@@ -2,9 +2,9 @@ from classes.FileSystem import FileSystem
 
 class Shell:
 
-
+    def __init__ (self):
+        self.fs = FileSystem()
     def execute(self):
-        fs = FileSystem()
         while(True):
             print(">>: ", end=" "),
             parameters = input()
@@ -26,5 +26,5 @@ class Shell:
             elif(parameter[0] == "cd"):
                 print("cd")
             
-
-
+    def createRoot(self):
+        self.fs.createDirectory("hola")
