@@ -16,12 +16,11 @@ class FileSystem:
             self.Device.setOcuppiedDataBitmap(availableBlock)
             inode.addBlock(availableBlock)
             subdata = data[block*4000:block*4000+4000]
-            print(subdata)
             self.Device.writeData(subdata,block)
-        print(inode.i_block)
+        
         lastDirectory = self.currentDirectory.getLastDirectoryEntries()
         nameSize = len(bytearray(name, "utf8"))
-
+        self.Device.saveInodeInDisk(inode)
         if lastDirectory:
             rec_len = lastDirectory.getRecLen()
             self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len() + 64 + nameSize, nameSize, name)
@@ -34,6 +33,7 @@ class FileSystem:
         self.Device.setOcuppiedDataBitmap(availableBlock)
         block = Block(availableBlock)
         inode.addBlock(availableBlock)
+        self.Device.saveInodeInDisk(inode)
         nameSize = len(bytearray(name, "utf8"))
 
         if self.currentDirectory is None:
@@ -45,7 +45,7 @@ class FileSystem:
                 self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len() + 64 + nameSize, nameSize, name)
             else:
                 self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name)
-            
+        
         self.Device.writeObject(block,availableBlock)
         
     def readFile(self, filename):

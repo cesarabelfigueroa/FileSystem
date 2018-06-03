@@ -1,11 +1,11 @@
 import itertools
 import math
 import datetime
-import numpy as np
+
 
 class Inode:
     def __init__(self, inodeId, mode, size):
-        self.id = inodeId
+        self.id = inodeId  
         self.i_mode = mode
         self.i_size = size
         self.i_atime = datetime.datetime.now()
@@ -14,7 +14,7 @@ class Inode:
         self.i_dtime = '/0'
         self.i_links_count = 0
         self.i_blocks = math.ceil(size / 4000)
-        self.i_block = np.array([])
+        self.i_block = []
         self.offset = 65024
         self.limit = 589312
 
@@ -73,4 +73,4 @@ class Inode:
         return (len(directBlocks) + len(indirectBlocks) + len(doubleIndirect) + len(tripleIndirect))
 
     def addBlock(self, index):
-        self.i_block = np.append(self.i_block, np.array([index]))
+        self.i_block.append(index)

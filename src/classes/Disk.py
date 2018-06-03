@@ -7,8 +7,8 @@ class Disk:
         # MB SIZE
         self.size = 256
         self.path = path
-        self.BLOCK_BITMAP_SIZE = 65536
-        self.INODE_BITMAP_SIZE = 1048576
+        self.BLOCK_BITMAP_SIZE = 64000
+        self.INODE_BITMAP_SIZE = 1024
         self.INODE_SIZE = 512
         self.BLOCK_OFFSET = self.INODE_SIZE*1024 + self.BLOCK_BITMAP_SIZE + self.INODE_BITMAP_SIZE 
         self.BLOCK_SIZE = 32000
@@ -62,7 +62,8 @@ class Disk:
     def saveInodeInDisk(self, inode):
         with open(self.path, "rb+") as file:
             file.seek((inode.id*self.INODE_SIZE)+inode.offset)
-            pickle.dump(inode,file)
+            value = pickle.dumps(inode, True) 
+            file.write(value)
             file.close()
 
     def getInodeFromDisk(self, index):
@@ -77,8 +78,7 @@ class Disk:
         index = self.getAvailableSpaceInInodeBitmap()
         self.setOcuppiedInodeBitmap(index)
 
-        inode = Inode(index,mode,size)
-        self.saveInodeInDisk(inode)
+        inode = Inode(index-self.BLOCK_BITMAP_SIZE,mode,size)
         return inode
 
     def writeData (self, data, block):
@@ -92,12 +92,14 @@ class Disk:
         value = ""
         with open(self.path, "rb+") as file:
             file.seek(self.BLOCK_OFFSET+ index* self.BLOCK_SIZE)
-            value = file.read(data, self.BLOCK_SIZE)
+            value = pickle.load(file, encoding='bytes')
+            print (value)
             file.close()
-        return str(value)
+        return value
 
     def writeObject(self, val,block):
         with open(self.path, "rb+") as file:
             file.seek(self.BLOCK_OFFSET+ block* self.BLOCK_SIZE)
-            pickle.dump(val,file)
+            value = pickle.dumps(val, True) 
+            file.write(value)
             file.close()
