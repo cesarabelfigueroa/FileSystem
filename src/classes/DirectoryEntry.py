@@ -7,5 +7,5 @@ class DirectoryEntry:
         self.name_len = name_len
         self.name = name
 
-    def getRecLen ():
+    def getRecLen (self):
         return self.rec_len

@@ -10,13 +10,17 @@ class Shell:
             parameters = input()
             parameters = parameters.split(" ")
             if(parameters[0] == "cat"):
-                print("cat")
                 if parameters[1]== ">":
                     content = input()
-                    
+                    self.fs.createFile(content, parameters[2])
+                else:
+                    filename = parameters[1]
+                    self.fs.readFile(filename)
 
             elif(parameters[0] == "ls"):
-                print("ls")
+                current = self.fs.currentDirectory
+                if(current != None):
+                    print(current.directoryEntries[0].name)
             elif(parameters[0] == "mkdir"):
                 print("mkdir")
             elif(parameters[0] == "rmdir"):

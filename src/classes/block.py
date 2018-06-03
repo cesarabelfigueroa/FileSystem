@@ -11,6 +11,7 @@ class Block:
 
     def addDirectoryEntry(self, inode, rec_len, name_len, name):
         entry = DirectoryEntry(inode,rec_len,name_len,name)
+        self.directoryEntries.append(entry)
 
     def getLastDirectoryEntries(self):
         size = len(self.directoryEntries)-1

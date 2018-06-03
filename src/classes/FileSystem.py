@@ -8,23 +8,25 @@ class FileSystem:
         self.Disk = self.Device.createDisk()
         self.currentDirectory = None
 
-    def creteFile(self, content, name):
-        data = bytearray(content)
+    def createFile(self, content, name):
+        data = bytearray(content, 'utf8')
         inode = self.Device.createInode(1,len(data))
         for block in range(0,inode.i_blocks):
             availableBlock = self.Device.getAvailableSpaceInDataBitmap()
             self.Device.setOcuppiedDataBitmap(availableBlock)
             inode.addBlock(availableBlock)
-            subdata = data[block*4000,block*4000+4000]
+            subdata = data[block*4000:block*4000+4000]
+            print(subdata)
             self.Device.writeData(subdata,block)
-            
+        print(inode.i_block)
         lastDirectory = self.currentDirectory.getLastDirectoryEntries()
+        nameSize = len(bytearray(name, "utf8"))
+
         if lastDirectory:
             rec_len = lastDirectory.getRecLen()
-            nameSize = len(bytearray(name))
-            self.currentDirectory.addDirectoryEntry(inode.getId, rec_len() + 64 + nameSize, nameSize, bytearray(name) )
+            self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len() + 64 + nameSize, nameSize, name)
         else:
-            self.currentDirectory.addDirectoryEntry(inode.getId, 0 , nameSize, bytearray(name) )
+            self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name)
 
     def createDirectory (self, name):
         inode = self.Device.createInode(0,0)
@@ -32,6 +34,7 @@ class FileSystem:
         self.Device.setOcuppiedDataBitmap(availableBlock)
         block = Block(availableBlock)
         inode.addBlock(availableBlock)
+        nameSize = len(bytearray(name, "utf8"))
 
         if self.currentDirectory is None:
             self.currentDirectory = block
@@ -39,13 +42,25 @@ class FileSystem:
             lastDirectory = self.currentDirectory.getLastDirectoryEntries()
             if lastDirectory:
                 rec_len = lastDirectory.getRecLen()
-                nameSize = len(bytearray(name))
-                self.currentDirectory.addDirectoryEntry(inode.getId, rec_len() + 64 + nameSize, nameSize, bytearray(name) )
+                self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len() + 64 + nameSize, nameSize, name)
             else:
-                self.currentDirectory.addDirectoryEntry(inode.getId, 0 , nameSize, bytearray(name) )
+                self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name)
             
         self.Device.writeObject(block,availableBlock)
         
+    def readFile(self, filename):
+        entries = self.currentDirectory.directoryEntries
+        for x in entries:
+            if(x.name == filename):
+                inode = self.Device.getInodeFromDisk(x.inode)
+                print(inode.i_block)
+
+                for block in inode.i_block:
+                    print(block)
+                    value = self.Device.readData(block)
+                    print(value)
+                return ""
+
         
 
             
