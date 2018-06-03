@@ -7,8 +7,8 @@ class Disk:
         # MB SIZE
         self.size = 256
         self.path = path
-        self.BLOCK_BITMAP_SIZE = 65536
-        self.INODE_BITMAP_SIZE = 1048576
+        self.BLOCK_BITMAP_SIZE = 64000
+        self.INODE_BITMAP_SIZE = 1024
         self.INODE_SIZE = 512
         self.BLOCK_OFFSET = self.INODE_SIZE*1024 + self.BLOCK_BITMAP_SIZE + self.INODE_BITMAP_SIZE 
         self.BLOCK_SIZE = 32000
@@ -39,9 +39,11 @@ class Disk:
     def getAvailableSpaceInInodeBitmap(self):
         f = open(self.path, 'r')
         for bit in range(self.BLOCK_BITMAP_SIZE, self.INODE_BITMAP_SIZE + self.BLOCK_BITMAP_SIZE):
+            
             f.seek(bit)
             value = f.read(1)
             if value == '\x00':
+                print(bit)
                 return bit
         return False
 
@@ -61,15 +63,17 @@ class Disk:
 
     def saveInodeInDisk(self, inode):
         with open(self.path, "rb+") as file:
-            file.seek((inode.id*self.INODE_SIZE)+inode.offset)
+            print("otro inodo "+str(inode.id))
+            file.seek(inode.id)
             pickle.dump(inode,file)
             file.close()
 
     def getInodeFromDisk(self, index):
         value = ""
         with open(self.path, "rb+") as file:
-            file.seek((index*self.INODE_SIZE)+ 65024)
-            value = pickle.load(file, encoding='bytes')
+            print("index: "+ str(index))
+            file.seek(index)
+            value = pickle.load(file, encoding='latin1')
             file.close()
         return value
 

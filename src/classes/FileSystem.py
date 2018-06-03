@@ -11,6 +11,7 @@ class FileSystem:
     def createFile(self, content, name):
         data = bytearray(content, 'utf8')
         inode = self.Device.createInode(1,len(data))
+        print("id del inodo: "+str(inode.id))
         for block in range(0,inode.i_blocks):
             availableBlock = self.Device.getAvailableSpaceInDataBitmap()
             self.Device.setOcuppiedDataBitmap(availableBlock)
@@ -19,6 +20,7 @@ class FileSystem:
             print(subdata)
             self.Device.writeData(subdata,block)
         print(inode.i_block)
+
         lastDirectory = self.currentDirectory.getLastDirectoryEntries()
         nameSize = len(bytearray(name, "utf8"))
 
@@ -52,6 +54,7 @@ class FileSystem:
         entries = self.currentDirectory.directoryEntries
         for x in entries:
             if(x.name == filename):
+                print("inodo: "+str(x.inode))
                 inode = self.Device.getInodeFromDisk(x.inode)
                 print(inode.i_block)
 
