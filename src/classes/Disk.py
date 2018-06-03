@@ -49,14 +49,12 @@ class Disk:
         with open(self.path, "rb+") as file:
             file.seek(index)
             file.write(bytearray([1]))
-            value = file.read(1)
             file.close()
 
     def setOcuppiedInodeBitmap(self, index):
         with open(self.path, "rb+") as file:
             file.seek(index)
             file.write(bytearray([1]))
-            value = file.read(1)
             file.close()
 
     def saveInodeInDisk(self, inode):
@@ -77,7 +75,6 @@ class Disk:
     def createInode(self, mode, size):
         index = self.getAvailableSpaceInInodeBitmap()
         self.setOcuppiedInodeBitmap(index)
-
         inode = Inode(index-self.BLOCK_BITMAP_SIZE,mode,size)
         return inode
 
@@ -85,6 +82,9 @@ class Disk:
         with open(self.path, "rb+") as file:
             file.seek(self.BLOCK_OFFSET+ block* self.BLOCK_SIZE)
             file.write(data)
+            print(block)
+            value = file.read(4000)
+            print(value.decode("utf8"))
             file.close()
 
 
@@ -92,8 +92,7 @@ class Disk:
         value = ""
         with open(self.path, "rb+") as file:
             file.seek(self.BLOCK_OFFSET+ index* self.BLOCK_SIZE)
-            value = pickle.load(file, encoding='bytes')
-            print (value)
+            value = file.read(32000)
             file.close()
         return value
 
