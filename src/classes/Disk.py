@@ -81,7 +81,7 @@ class Disk:
         index = self.getAvailableSpaceInInodeBitmap()
         self.setOcuppiedInodeBitmap(index)
 
-        inode = Inode(index,mode,size)
+        inode = Inode(index+1024,mode,size)
         self.saveInodeInDisk(inode)
         return inode
 
