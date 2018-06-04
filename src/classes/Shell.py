@@ -24,13 +24,17 @@ class Shell:
                     for entry in current.directoryEntries:
                         print(entry.name)
             elif(parameters[0] == "mkdir"):
-                print("mkdir")
+                if (len(parameters[1]) >= 1 ):
+                    self.fs.createDirectory(parameters[1])    
+                
             elif(parameters[0] == "rmdir"):
                 print("rmdir")
-            elif(parameter[0] == "rm"):
+            elif(parameters[0] == "rm"):
                 print("rm")
-            elif(parameter[0] == "cd"):
-                print("cd")
+            elif(parameters[0] == "cd"):
+                if (len(parameters[1]) >= 1 ):
+                    self.fs.changeDirectory(parameters[1]) 
+                
             
     def createRoot(self):
         self.fs.createDirectory("hola")

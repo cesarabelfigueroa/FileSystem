@@ -100,3 +100,11 @@ class Disk:
             value = pickle.dumps(val, True) 
             file.write(value)
             file.close()
+
+    def readObject(self, index):
+        value= ""
+        with open(self.path, "rb+") as file:
+            file.seek(self.BLOCK_OFFSET+ index* self.BLOCK_SIZE)
+            value = pickle.load(file)
+            file.close()
+        return value

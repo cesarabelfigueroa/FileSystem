@@ -7,6 +7,7 @@ class FileSystem:
         self.Device = Disk("./disk/Disk.bin")
         self.Disk = self.Device.createDisk()
         self.currentDirectory = None
+        self.currentBlock = None
 
     def createFile(self, content, name):
         data = bytearray(content, 'utf8')
@@ -27,6 +28,7 @@ class FileSystem:
             self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len + 64 + nameSize, nameSize, name)
         else:
             self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name)
+        self.Device.writeObject(self.currentDirectory, self.currentBlock)
 
     def createDirectory (self, name):
         inode = self.Device.createInode(0,0)
@@ -39,6 +41,7 @@ class FileSystem:
 
         if self.currentDirectory is None:
             self.currentDirectory = block
+            self.currentBlock = availableBlock
         else:
             lastDirectory = self.currentDirectory.getLastDirectoryEntries()
             if lastDirectory:
@@ -48,16 +51,37 @@ class FileSystem:
                 self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name)
         
         self.Device.writeObject(block,availableBlock)
+        self.Device.writeObject(self.currentDirectory, self.currentBlock)
         
     def readFile(self, filename):
         entries = self.currentDirectory.directoryEntries
         for x in entries:
             if(x.name == filename):
                 inode = self.Device.getInodeFromDisk(x.inode)
-                for block in inode.i_block:
-                    value = self.Device.readData(block)
-                    return value.decode("utf8")
-                return ""
+                if (inode.i_mode != 0):
+                    returnValue= ""
+                    for block in inode.i_block:
+                        value = self.Device.readData(block)
+                        returnValue += (value.decode("utf8")).rstrip('\0')
+                    return returnValue
+                else:
+                    return filename + " Is a directory"
+
+    def changeDirectory(self,directoryName):
+        entries = self.currentDirectory.directoryEntries
+        for x in entries:
+            if(x.name == directoryName):
+                inode = self.Device.getInodeFromDisk(x.inode)
+                if (inode.i_mode == 0):
+                    
+                    for block in inode.i_block:
+                        value = self.Device.readObject(block)
+                        self.currentDirectory = value
+                        self.currentBlock = block
+                        print (value.directoryEntries)
+                    
+                else:
+                    return directoryName + " Is a File"
 
         
 
