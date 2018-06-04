@@ -88,6 +88,35 @@ class FileSystem:
                 self.currentDirectory = self.currentDirectory.parent
                 self.currentBlock = self.currentDirectory.parentBlock
 
+    def deleteFile(self, filename):
+        entries = self.currentDirectory.directoryEntries
+        for x in entries:
+            if(x.name == filename):
+                inode = self.Device.getInodeFromDisk(x.inode)
+                if (inode.i_mode != 0):
+                    for block in inode.i_block:
+                       self.Device.setFreeDataBitmap(block)
+                    self.Device.setFreeInodeBitmap(inode.id)
+                    self.currentDirectory.directoryEntries.remove(x)
+                    self.Device.writeObject(self.currentDirectory, self.currentBlock)
+                else:
+                    return filename + " Is a directory"
+
+    def deleteDirectory(self, directoryName):
+        entries = self.currentDirectory.directoryEntries
+        for x in entries:
+            if(x.name == directoryName):
+                inode = self.Device.getInodeFromDisk(x.inode)
+                if (inode.i_mode == 0):
+                    for block in inode.i_block:
+                        value = self.Device.readObject(block)
+                        if(len(value.directoryEntries) == 0):
+                            self.Device.setFreeDataBitmap(block)
+                            self.Device.setFreeInodeBitmap(inode.id)
+                            self.currentDirectory.directoryEntries.remove(x)
+                            self.Device.writeObject(self.currentDirectory, self.currentBlock)
+                else:
+                    return directoryName + " Is a File"
         
 
             

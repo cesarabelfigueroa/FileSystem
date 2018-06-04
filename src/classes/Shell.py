@@ -28,13 +28,15 @@ class Shell:
                     self.fs.createDirectory(parameters[1])    
                 
             elif(parameters[0] == "rmdir"):
-                print("rmdir")
+                if (len(parameters[1]) >= 1 ):
+                    self.fs.deleteDirectory(parameters[1]) 
             elif(parameters[0] == "rm"):
-                print("rm")
+               if (len(parameters[1]) >= 1):
+                    self.fs.deleteFile(parameters[1]) 
             elif(parameters[0] == "cd"):
                 if (len(parameters[1]) >= 1 ):
                     self.fs.changeDirectory(parameters[1]) 
                 
             
     def createRoot(self):
-        self.fs.createDirectory("hola")
+        self.fs.createDirectory("")

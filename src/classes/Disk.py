@@ -57,6 +57,18 @@ class Disk:
             file.write(bytearray([1]))
             file.close()
 
+    def setFreeDataBitmap(self, index):
+        with open(self.path, "rb+") as file:
+            file.seek(index)
+            file.write(bytearray([0]))
+            file.close()
+
+    def setFreeInodeBitmap(self, index):
+        with open(self.path, "rb+") as file:
+            file.seek(index+self.BLOCK_BITMAP_SIZE)
+            file.write(bytearray([0]))
+            file.close()
+
     def saveInodeInDisk(self, inode):
         with open(self.path, "rb+") as file:
             file.seek((inode.id*self.INODE_SIZE)+inode.offset)
