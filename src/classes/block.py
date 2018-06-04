@@ -11,8 +11,8 @@ class Block:
     def getId(self):
         return self.id
 
-    def addDirectoryEntry(self, inode, rec_len, name_len, name):
-        entry = DirectoryEntry(inode,rec_len,name_len,name)
+    def addDirectoryEntry(self, inode, rec_len, name_len, name, indexNode):
+        entry = DirectoryEntry(inode,rec_len,name_len,name, indexNode)
         self.directoryEntries.append(entry)
 
     def getLastDirectoryEntries(self):

@@ -21,8 +21,14 @@ class Shell:
             elif(parameters[0] == "ls"):
                 current = self.fs.currentDirectory
                 if(current != None):
-                    for entry in current.directoryEntries:
-                        print(entry.name)
+                    if (len(parameters) > 1):
+                        if (parameters[1] == "-l"):
+                            for entry in current.directoryEntries:
+                                printValue = "" + str(entry.name) + " " + str(entry.indexNode.i_mode) + " " + str(entry.indexNode.i_ctime) + " " + str(entry.indexNode.i_size)
+                                print(printValue)
+                    else:
+                        for entry in current.directoryEntries:
+                            print(entry.name)
             elif(parameters[0] == "mkdir"):
                 if (len(parameters[1]) >= 1 ):
                     self.fs.createDirectory(parameters[1])    

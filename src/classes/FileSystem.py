@@ -27,9 +27,9 @@ class FileSystem:
         self.Device.saveInodeInDisk(inode)
         if lastDirectory:
             rec_len = lastDirectory.getRecLen()
-            self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len + 64 + nameSize, nameSize, name)
+            self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len + 64 + nameSize, nameSize, name, inode)
         else:
-            self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name)
+            self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name, inode)
         self.Device.writeObject(self.currentDirectory, self.currentBlock)
 
     def createDirectory (self, name):
@@ -48,9 +48,9 @@ class FileSystem:
             lastDirectory = self.currentDirectory.getLastDirectoryEntries()
             if lastDirectory:
                 rec_len = lastDirectory.getRecLen()
-                self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len + 64 + nameSize, nameSize, name)
+                self.currentDirectory.addDirectoryEntry(inode.getId(), rec_len + 64 + nameSize, nameSize, name, inode)
             else:
-                self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name)
+                self.currentDirectory.addDirectoryEntry(inode.getId(), 0 , nameSize, name, inode)
         
         self.Device.writeObject(block,availableBlock)
         self.Device.writeObject(self.currentDirectory, self.currentBlock)
