@@ -1,8 +1,10 @@
 import itertools
 from classes.DirectoryEntry import DirectoryEntry
 class Block:
-    def __init__(self,blockId):
+    def __init__(self,blockId, parent, parentBlock):
         self.blockId = blockId
+        self.parent = parent
+        self.parentBlock = parentBlock
         self.directoryEntries = []
 
     

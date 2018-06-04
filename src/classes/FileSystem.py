@@ -1,6 +1,8 @@
 from classes.Disk import Disk
 from classes.block import Block
 from classes.DirectoryEntry import DirectoryEntry
+import copy
+
 class FileSystem:
 
     def __init__(self):
@@ -34,7 +36,7 @@ class FileSystem:
         inode = self.Device.createInode(0,0)
         availableBlock = self.Device.getAvailableSpaceInDataBitmap()
         self.Device.setOcuppiedDataBitmap(availableBlock)
-        block = Block(availableBlock)
+        block = Block(availableBlock, self.currentDirectory, availableBlock)
         inode.addBlock(availableBlock)
         self.Device.saveInodeInDisk(inode)
         nameSize = len(bytearray(name, "utf8"))
@@ -68,20 +70,23 @@ class FileSystem:
                     return filename + " Is a directory"
 
     def changeDirectory(self,directoryName):
-        entries = self.currentDirectory.directoryEntries
-        for x in entries:
-            if(x.name == directoryName):
-                inode = self.Device.getInodeFromDisk(x.inode)
-                if (inode.i_mode == 0):
-                    
-                    for block in inode.i_block:
-                        value = self.Device.readObject(block)
-                        self.currentDirectory = value
-                        self.currentBlock = block
-                        print (value.directoryEntries)
-                    
-                else:
-                    return directoryName + " Is a File"
+        if(directoryName != ".."):
+            entries = self.currentDirectory.directoryEntries
+            for x in entries:
+                if(x.name == directoryName):
+                    inode = self.Device.getInodeFromDisk(x.inode)
+                    if (inode.i_mode == 0):
+                        for block in inode.i_block:
+                            value = self.Device.readObject(block)
+                            self.currentDirectory = value
+                            self.currentBlock = block
+                        
+                    else:
+                        return directoryName + " Is a File"
+        else:
+            if(self.currentDirectory.parent != None):
+                self.currentDirectory = self.currentDirectory.parent
+                self.currentBlock = self.currentDirectory.parentBlock
 
         
 
